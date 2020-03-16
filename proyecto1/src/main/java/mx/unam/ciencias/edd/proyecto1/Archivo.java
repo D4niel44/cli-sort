@@ -3,6 +3,7 @@ package mx.unam.ciencias.edd.proyecto1;
 import java.io.*;
 import java.util.Comparator;
 import java.text.Normalizer;
+import java.text.Normalizer.Form;
 
 import mx.unam.ciencias.edd.Lista;
 
@@ -36,14 +37,14 @@ public class Archivo {
      * Ordena el archivo lexicográficamente usando el orden por defecto.
      */
     public void ordena() {
-
+        this.ordena((a, b) -> compara(a, b));
     }
 
     /**
      * Ordena el archivo lexicográficamente usando el inverso del orden por defecto
      */
     public void ordenaReversa() {
-
+        this.ordena((a, b) -> -compara(a, b));
     }
 
     /**
@@ -67,72 +68,21 @@ public class Archivo {
     }
 
     private int compara(String a, String b) {
+        a = Normalizer.normalize(a, Form.NFKD).replaceAll("\\p{M}", "");
+        b = Normalizer.normalize(b, Form.NFKD).replaceAll("\\p{M}", "");
         int minimo = Math.min(a.length(), b.length());
         int contA = 0, contB = 0;
         for (int i = 0; i < minimo; i++) {
-            int charA = a.charAt(contA);
-            int charB = b.charAt(contB);
-            if (!Character.isLetterOrDigit(charA)) {
+            int charA = a.codePointAt(contA);
+            int charB = b.codePointAt(contB);
+            if (Character.isWhitespace(charA)) {
                 contA++;
-            } else if (!Character.isLetterOrDigit(charB)) {
+            } else if (Character.isWhitespace(charB)) {
                 contB++;
-            } else if (Character.toLowerCase(charA) == Character.toLowerCase(charB) && charA != charB) {
-
+            } else if (charA != charB){
+                return charA - charB;
             }
         }
-    }
-
-    private int cambiaChar(char a) {
-        switch (a) {
-            case 'á':
-            case 'ä':
-                a = 'a';
-                break;
-            case 'Á':
-            case 'Ä':
-                a = 'A';
-                break;
-            case 'é':
-            case 'ë':
-                a = 'e';
-                break;
-            case 'É':
-            case 'Ë':
-                a = 'E';
-                break;
-            case 'í':
-            case 'ï':
-                a = 'i';
-                break;
-            case 'Í':
-            case 'Ï':
-                a = 'I';
-                break;
-            case 'ó':
-            case 'ö':
-                a = 'o';
-                break;
-            case 'Ó':
-            case 'Ö':
-                a = 'O';
-                break;
-            case 'ú':
-            case 'ü':
-                a = 'u';
-                break;
-            case 'Ú':
-            case 'Ü':
-                a = 'U';
-                break;
-            case 'ñ':
-                a = 'n';
-                break;
-            case 'Ñ':
-                a = 'N';
-                break;
-            default:
-                break;
-        }
-        return a;
+        return a.length() - b.length();
     }
 }
