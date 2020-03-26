@@ -8,7 +8,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.BufferedReader;
 
-
 public class App {
     // indica si el arvhivo se debe ordenar en reversa
     private boolean reversa;
@@ -27,6 +26,7 @@ public class App {
      * 
      * @param argumentos Un arreglo que contiene los argumentos que se le pasan a la
      *                   aplicación.
+     * 
      */
     public App(String[] argumentos) {
         archivo = new Archivo();
@@ -71,6 +71,13 @@ public class App {
         FileWriter f = null;
         try {
             f = new FileWriter(new File(ruta));
+        } catch (FileNotFoundException e) {
+            throw new ExcepcionArchivoNoEncontrado("No se pudo abrir: " + e.getMessage(), e);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try {
+
             f.write(archivo.toString());
         } catch (IOException e) {
             e.printStackTrace();
@@ -92,11 +99,13 @@ public class App {
         try {
             if (rutaArchivo == null)
                 bufer = new BufferedReader(new InputStreamReader(System.in));
-            else 
-                bufer = new BufferedReader(new FileReader(new File(rutaArchivo)));   
-            archivo.cargarArchivo(bufer);
+            else
+                bufer = new BufferedReader(new FileReader(new File(rutaArchivo)));
         } catch (FileNotFoundException e) {
-            System.out.println("El archivo " + rutaArchivo + "no se  encontró o no existe.");
+            throw new ExcepcionArchivoNoEncontrado("No se pudo leer: " + e.getMessage(), e);
+        }
+        try {
+            archivo.cargarArchivo(bufer);
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
@@ -125,13 +134,15 @@ public class App {
                     break;
                 case 'o':
                     int siguiente = indice + procesados + 1;
+                    if (ruta != null)
+                        throw new ExcepcionArgumentoInvalido("Ya se especificó un archivo de salida.");
                     if (siguiente >= argumentos.length)
                         throw new ExcepcionArgumentoInvalido("La opcion 'o' debe recibir un argumento.");
                     ruta = argumentos[siguiente];
                     procesados++;
                     break;
                 default:
-                    throw new ExcepcionBanderaInvalida(bandera.charAt(i) + " es inválida.");
+                    throw new ExcepcionBanderaInvalida(bandera.charAt(i) + " es una opción inválida.");
             }
         }
         return procesados;
