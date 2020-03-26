@@ -51,7 +51,7 @@ public class App {
      * @return Un string con la información del archivo ordenado o null si se
      *         especificó -o
      */
-    public String ejecutar() {
+    public void ejecutar() {
         if (reversa) {
             archivo.ordenaReversa();
         } else {
@@ -59,9 +59,8 @@ public class App {
         }
         if (ruta != null) {
             guardarArchivo();
-            return null;
         } else {
-            return archivo.toString();
+            System.out.println(archivo.toString());
         }
     }
 
