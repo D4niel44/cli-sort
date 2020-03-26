@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 
 import mx.unam.ciencias.edd.Cola;
@@ -30,7 +31,7 @@ public class App {
      *                   aplicación.
      */
     public App(String[] argumentos) {
-        Cola<BufferedReader> cola = new Cola<>();
+        archivo = new Archivo();
         // procesa los argumentos
         for (int i = 0; i < argumentos.length; i++) {
             String cadena = argumentos[i];
@@ -38,18 +39,12 @@ public class App {
                 int salto = manejarBandera(argumentos, cadena, i);
                 i += salto; // se salta los argumentos ya procesados por manejarBandera.
             } else {
-                cola.mete(leerArchivo(cadena));
+                leerArchivo(argumentos[i]);
             }
         }
         // Si no se pasó como parámetro ningún archivo se toma la entrada estándar.
-        if (cola.esVacia())
-            cola.mete(leerArchivo(null));
-        // Ejecuta el constructor de Archivo
-        try {
-            archivo = new Archivo(cola);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        if (archivo.esVacio())
+            leerArchivo(null);
     }
 
     /**
@@ -93,27 +88,27 @@ public class App {
 
     /**
      * Lee un archivo del sistema. Si se le pasa una cadena null crea un Reader a
-     * partir de la entrada estándar;
-     * 
-     * @param ruta La ruta del archivo que se va a leer
+     * partir de la entrada estándar
      */
-    private BufferedReader leerArchivo(String rutaArchivo) {
-        BufferedReader r = null;
+    private void leerArchivo(String rutaArchivo) {
+        BufferedReader bufer = null;
         try {
-            if (rutaArchivo != null)
-                r = new BufferedReader(new FileReader(new File(rutaArchivo)));
-            else
-                r = new BufferedReader(new InputStreamReader(System.in));
+            if (rutaArchivo == null)
+                bufer = new BufferedReader(new InputStreamReader(System.in));
+            else 
+                bufer = new BufferedReader(new FileReader(new File(rutaArchivo)));   
+            archivo.cargarArchivo(bufer);
         } catch (FileNotFoundException e) {
-            System.out.println("El archivo " + rutaArchivo + " no existe.");
+            System.out.println("El archivo " + rutaArchivo + "no se  encontró o no existe.");
+        } catch (IOException e) {
+            e.printStackTrace();
         } finally {
             try {
-                r.close();
+                bufer.close();
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
-        return r;
     }
 
     /**
@@ -135,6 +130,7 @@ public class App {
                     int siguiente = indice + procesados + 1;
                     if (siguiente >= argumentos.length)
                         throw new ExcepcionArgumentoInvalido("La opcion 'o' debe recibir un argumento.");
+                    ruta = argumentos[siguiente];
                     procesados++;
                     break;
                 default:

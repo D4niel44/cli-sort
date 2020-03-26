@@ -7,7 +7,6 @@ import java.text.Normalizer;
 import java.text.Normalizer.Form;
 
 import mx.unam.ciencias.edd.Lista;
-import mx.unam.ciencias.edd.Cola;
 
 /**
  * 
@@ -17,25 +16,31 @@ public class Archivo {
     private Lista<String> lineas;
 
     /**
-     * Constructor que crea un archivo a partir de los BufferedReader de la entrada,
-     * Todos son tratados como un único archivo.
+     * Constructor por omisión
      * 
-     * @param cola Cola con los buffers de entrada a ser procesados
-     * @throws IOException
-     * @throws IllegalArgumentException Si la cola es vacía.
      */
-    public Archivo(Cola<BufferedReader> cola) throws IOException {
-        if (cola == null)
-            throw new IllegalArgumentException("La cola no puede estar vacía");
-        while (!cola.esVacia()) {
-            BufferedReader lector = cola.saca();
-            String linea = lector.readLine();
-            while (linea != null) {
-                lineas.agregaFinal(linea);
-                linea = lector.readLine();
-            }
-            lector.close();
+    public Archivo() {
+        lineas = new Lista<>();
+    }
+
+    /**
+     * Lee las lineas de un archivo y las agrega al objeto.
+     * @param bufer Entrada de la cual leer el archivo
+     */
+    public void cargarArchivo(BufferedReader bufer) throws IOException {
+        String linea = bufer.readLine();
+        while (linea != null) {
+            lineas.agregaFinal(linea);
+            linea = bufer.readLine();
         }
+    }
+
+    /**
+     * Dice si el archivo es vacío
+     * @return Si se le han añadido lineas al archivo regresa true en otro caso false
+     */
+    public boolean esVacio() {
+        return lineas.esVacia();
     }
 
     /**
