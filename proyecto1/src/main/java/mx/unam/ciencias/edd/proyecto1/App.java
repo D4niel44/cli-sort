@@ -6,10 +6,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 
-import mx.unam.ciencias.edd.Cola;
 
 public class App {
     // indica si el arvhivo se debe ordenar en reversa
