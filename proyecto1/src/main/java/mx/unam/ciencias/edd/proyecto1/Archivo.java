@@ -1,11 +1,13 @@
 package mx.unam.ciencias.edd.proyecto1;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.BufferedReader;
 import java.util.Comparator;
 import java.text.Normalizer;
 import java.text.Normalizer.Form;
 
 import mx.unam.ciencias.edd.Lista;
+import mx.unam.ciencias.edd.Cola;
 
 /**
  * 
@@ -18,18 +20,21 @@ public class Archivo {
      * Constructor que crea un archivo a partir de los BufferedReader de la entrada,
      * Todos son tratados como un único archivo.
      * 
-     * @param lector Arreglo con un BufferedReader que representa cada archivo a
-     *               ordenar
+     * @param cola Cola con los buffers de entrada a ser procesados
      * @throws IOException
+     * @throws IllegalArgumentException Si la cola es vacía.
      */
-    public Archivo(BufferedReader[] lector) throws IOException {
-        for (int i = 0; i < lector.length; i++) {
-            String linea;
-            do {
-                linea = lector[i].readLine();
-                if (linea != null)
-                    lineas.agregaFinal(linea);
-            } while (linea != null);
+    public Archivo(Cola<BufferedReader> cola) throws IOException {
+        if (cola == null)
+            throw new IllegalArgumentException("La cola no puede estar vacía");
+        while (!cola.esVacia()) {
+            BufferedReader lector = cola.saca();
+            String linea = lector.readLine();
+            while (linea != null) {
+                lineas.agregaFinal(linea);
+                linea = lector.readLine();
+            }
+            lector.close();
         }
     }
 
@@ -79,7 +84,7 @@ public class Archivo {
                 contA++;
             } else if (Character.isWhitespace(charB)) {
                 contB++;
-            } else if (charA != charB){
+            } else if (charA != charB) {
                 return charA - charB;
             }
         }
