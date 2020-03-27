@@ -1,6 +1,5 @@
 package mx.unam.ciencias.edd.proyecto1;
 
-import java.io.IOException;
 
 /**
  * Excepcion que se lanza cuando una bandera que debe recibir un argumento no lo
