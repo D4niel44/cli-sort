@@ -44,7 +44,7 @@
 	<configuration>
 	  <archive>
 	    <manifest>
-	      <mainClass>mx.unam.ciencias.edd.proyecto1.Sort</mainClass>
+	      <mainClass>mx.unam.ciencias.edd.proyecto1.App</mainClass>
 	    </manifest>
 	  </archive>
 	</configuration>
