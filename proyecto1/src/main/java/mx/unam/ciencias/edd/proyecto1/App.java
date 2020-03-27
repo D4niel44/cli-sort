@@ -8,6 +8,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.BufferedReader;
 
+/**
+ * 
+ */
 public class App {
     // indica si el arvhivo se debe ordenar en reversa
     private boolean reversa;
@@ -51,17 +54,16 @@ public class App {
      * @return Un string con la información del archivo ordenado o null si se
      *         especificó -o
      */
-    public void ejecutar() {
-        if (reversa) {
+    public String ejecutar() {
+        if (reversa)
             archivo.ordenaReversa();
-        } else {
+        else
             archivo.ordena();
-        }
         if (ruta != null) {
             guardarArchivo();
-        } else {
-            System.out.println(archivo.toString());
+            return "";
         }
+        return archivo.toString();
     }
 
     /**
