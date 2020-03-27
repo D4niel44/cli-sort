@@ -37,7 +37,7 @@ public class App {
                 int salto = manejarBandera(argumentos, cadena, i);
                 i += salto; // se salta los argumentos ya procesados por manejarBandera.
             } else {
-                leerArchivo(argumentos[i]);
+                leerArchivo(cadena);
             }
         }
         // Si no se pasó como parámetro ningún archivo se toma la entrada estándar.
@@ -77,7 +77,6 @@ public class App {
             e.printStackTrace();
         }
         try {
-
             f.write(archivo.toString());
         } catch (IOException e) {
             e.printStackTrace();

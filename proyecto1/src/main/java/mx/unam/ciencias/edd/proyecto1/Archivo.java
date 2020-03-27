@@ -2,10 +2,7 @@ package mx.unam.ciencias.edd.proyecto1;
 
 import java.io.IOException;
 import java.io.BufferedReader;
-import java.util.Comparator;
-import java.text.Normalizer;
-import java.text.Normalizer.Form;
-
+import java.text.Collator;
 import mx.unam.ciencias.edd.Lista;
 
 /**
@@ -25,7 +22,9 @@ public class Archivo {
 
     /**
      * Lee las lineas de un archivo y las agrega al objeto.
+     * 
      * @param bufer Entrada de la cual leer el archivo
+     * @throws IOException Si ocurre un error al leer el archivo.
      */
     public void cargarArchivo(BufferedReader bufer) throws IOException {
         String linea = bufer.readLine();
@@ -37,7 +36,9 @@ public class Archivo {
 
     /**
      * Dice si el archivo es vacío
-     * @return Si se le han añadido lineas al archivo regresa true en otro caso false
+     * 
+     * @return Si no se le han añadido lineas al archivo regresa true en otro caso
+     *         false
      */
     public boolean esVacio() {
         return lineas.esVacia();
@@ -47,23 +48,14 @@ public class Archivo {
      * Ordena el archivo lexicográficamente usando el orden por defecto.
      */
     public void ordena() {
-        this.ordena((a, b) -> compara(a, b));
+        lineas = lineas.mergeSort((a, b) -> compara(a, b));
     }
 
     /**
      * Ordena el archivo lexicográficamente usando el inverso del orden por defecto
      */
     public void ordenaReversa() {
-        this.ordena((a, b) -> -compara(a, b));
-    }
-
-    /**
-     * Ordena el archivo usando el comparador provisto
-     * 
-     * @param comparador
-     */
-    public void ordena(Comparator<String> comparador) {
-        lineas = lineas.mergeSort(comparador);
+        lineas = lineas.mergeSort((a, b) -> -compara(a, b));
     }
 
     /**
@@ -77,22 +69,22 @@ public class Archivo {
         return s;
     }
 
+    /**
+     * Compara dos cadenas Alfabéticamente de acuerdo con las reglas provistas por
+     * el locale
+     * 
+     * @param a primera cadena a comparar
+     * @param b segunda cadena a comparar
+     * @return un número menor que cero si a<b, 0 si a=b y un numero mayor que cero
+     *         si a>b
+     */
     private int compara(String a, String b) {
-        a = Normalizer.normalize(a, Form.NFKD).replaceAll("\\p{M}", "");
-        b = Normalizer.normalize(b, Form.NFKD).replaceAll("\\p{M}", "");
-        int minimo = Math.min(a.length(), b.length());
-        int contA = 0, contB = 0;
-        for (int i = 0; i < minimo; i++) {
-            int charA = a.codePointAt(contA);
-            int charB = b.codePointAt(contB);
-            if (Character.isWhitespace(charA)) {
-                contA++;
-            } else if (Character.isWhitespace(charB)) {
-                contB++;
-            } else if (charA != charB) {
-                return charA - charB;
-            }
-        }
-        return a.length() - b.length();
+        // Crea el objeto que va a utilizarse para comparar las cadenas
+        Collator comparador = Collator.getInstance();
+        // Hace que el comparador obvie Mayúsculas y acentos a la hora de comparar.
+        comparador.setStrength(Collator.PRIMARY);
+        // un caracter que no sea una letra o un dígito.
+        String regex = "[^\\p{L}\\p{Nd}+]";
+        return comparador.compare(a.replaceAll(regex, ""), b.replaceAll(regex, ""));
     }
 }
