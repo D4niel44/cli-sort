@@ -9,7 +9,10 @@ import java.io.FileNotFoundException;
 import java.io.BufferedReader;
 
 /**
- * 
+ * Clase para ordenar archivos lexicograficamente. Los archivos a ordenar se
+ * pasan como argumentos al constructor de la clase. Todos los archivos se
+ * ordenan como uno solo. Admite las banderas -o para guardar el resultado en un
+ * fichero y -r para invertir el orden.
  */
 public class Sort {
     // indica si el arvhivo se debe ordenar en reversa
@@ -29,7 +32,9 @@ public class Sort {
      * 
      * @param argumentos Un arreglo que contiene los argumentos que se le pasan a la
      *                   aplicación.
-     * 
+     * @throws ExcepcionArchivoNoEncontrado Si algún archivo pasado como parámetro no existe o no se pudo leer.
+     * @throws ExcepcionBanderaInvalida Si se pasó una bandera inválida.
+     * @throws ExcepcionArgumentoInvalido Si se introdujo un argumento inválido.
      */
     public Sort(String[] argumentos) {
         archivo = new Archivo();
@@ -53,6 +58,7 @@ public class Sort {
      * 
      * @return Un string con la información del archivo ordenado o null si se
      *         especificó -o
+     * @throws ExcepcionArchivoNoEncontrado Si no se puede acceder a la ruta para guardar el archivo.
      */
     public String ejecutar() {
         if (reversa)
