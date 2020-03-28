@@ -2,6 +2,7 @@ package mx.unam.ciencias.edd.proyecto1;
 
 import java.io.IOException;
 import java.io.BufferedReader;
+import java.io.Writer;
 import java.text.Collator;
 import mx.unam.ciencias.edd.Lista;
 
@@ -67,6 +68,25 @@ public class Archivo {
         for (String linea : lineas)
             s += linea + "\n";
         return s;
+    }
+
+    /**
+     * Imprime el archivo en la salida estandar.
+     */
+    public void imprimirArchivo() {
+        for (String linea : lineas)
+            System.out.println(linea);
+    }
+
+    /**
+     * Escribe el contenido del archivo en el Writer pasado como parametro.
+     * No cierra el writer.
+     * @param f Writer donde se va a escribir el archivo
+     * @throws IOException Si ocurre un error I/O
+     */
+    public void escribirFichero(Writer f) throws IOException {
+        for (String linea : lineas)
+            f.write(linea + "\n");
     }
 
     /**

@@ -60,16 +60,15 @@ public class Sort {
      *         especificó -o
      * @throws ExcepcionArchivoNoEncontrado Si no se puede acceder a la ruta para guardar el archivo.
      */
-    public String ejecutar() {
+    public void ejecutar() {
         if (reversa)
             archivo.ordenaReversa();
         else
             archivo.ordena();
-        if (ruta != null) {
+        if (ruta != null)
             guardarArchivo();
-            return "";
-        }
-        return archivo.toString();
+        else
+            archivo.imprimirArchivo();
     }
 
     /**
@@ -85,7 +84,7 @@ public class Sort {
             e.printStackTrace();
         }
         try {
-            f.write(archivo.toString());
+            archivo.escribirFichero(f);
         } catch (IOException e) {
             e.printStackTrace();
         } finally {

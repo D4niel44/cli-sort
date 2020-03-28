@@ -13,8 +13,7 @@ public class App {
     public static void main(String[] args) {
         try {
             Sort app = new Sort(args);
-            String resultado = app.ejecutar();
-            System.out.print(resultado);
+            app.ejecutar();
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
